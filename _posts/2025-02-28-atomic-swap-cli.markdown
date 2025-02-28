@@ -70,7 +70,7 @@ asb是用于提供门罗币侧的流动性的，如果你只是想要用比特�
 
 你要在seller参数后输入你刚才获取到的卖家网络地址
 
-![trade_init](/assets/monero-atomic-swap/trade_init.png)
+![trade_init](/blog/assets/monero-atomic-swap/trade_init.png)
 
 务必确保正确的输入比特币和门罗币地址
 
