@@ -85,6 +85,108 @@ categories: jekyll update
 
 # 设置monero-wallet-rpc:
 
+下载最新版本的 Monero 二进制文件
+
+[https://github.com/monero-project/monero/releases/latest](https://github.com/monero-project/monero/releases/latest)
+
+{% highlight bash %}
+cd ~/asb
+wget https://downloads.getmonero.org/cli/monero-linux-x64-v0.18.1.0.tar.bz2
+{% endhighlight %}
+
+提取 monero-wallet-rpc 二进制文件:
+{% highlight bash %}
+tar xvf monero-linux-x64-v0.18.1.0.tar.bz2
+sudo chmod +x monero-x86_64-linux-gnu-v0.18.1.0/monero-wallet-rpc
+sudo cp monero-x86_64-linux-gnu-v0.18.1.0/monero-wallet-rpc /usr/local/bin
+rm monero-linux-x64-v0.18.1.0.tar.bz2
+rm -rf monero-x86_64-linux-gnu-v0.18.1.0
+{% endhighlight %}
+
+验证二进制文件是否正常工作：
+`monero-wallet-rpc --version`
+
+# 设置tor daemon:
+
+如果您使用的是 Debian，只需运行以下命令来安装和启动 Tor：
+
+{% highlight bash %}
+sudo apt-get install tor
+sudo systemctl enable tor
+sudo systemctl start tor
+{% endhighlight %}
+
+如果您使用的是 Ubuntu，请按照官方文档使用 Tor 提供的仓库：
+
+[https://support.torproject.org/apt/tor-deb-repo/](https://support.torproject.org/apt/tor-deb-repo/)
+
+配置好 Tor 仓库后，运行以下命令来安装和启动 Tor：
+
+{% highlight bash %}
+sudo apt install tor deb.torproject.org-keyring
+sudo systemctl enable tor
+sudo systemctl start tor
+{% endhighlight %}
+
+如果您使用的是 CentOS/RHEL，请按照官方文档使用 Tor 提供的仓库：
+
+[https://support.torproject.org/rpm/](https://support.torproject.org/rpm/)
+
+配置好 Tor 仓库后，运行以下命令来安装和启动 Tor：
+
+{% highlight bash %}
+sudo yum install tor
+sudo systemctl enable tor
+sudo systemctl start tor
+{% endhighlight %}
+
+## 使用ufw 加固系统：
+
+使用ufw禁止除了必要端口之外的访问，如果你不知道什么是ufw可以点击这里[https://landchad.net/ufw](https://landchad.net/ufw)
+
+执行以下命令以设置防火墙
+
+{% highlight bash %}
+#Deny all non-explicitly allowed ports
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+#Allow SSH access
+sudo ufw allow ssh
+
+#Allow the default ASB ports (remove the following two lines if running exclusively over Tor, as they are not needed)
+sudo ufw allow 9939/tcp
+sudo ufw allow 9940/tcp
+
+#Enable UFW
+sudo ufw enable
+{% endhighlight %}
+
+## 配置工具
+
+# 设置asb的用户和相关目录
+
+我们要为两个工具和相关目录设置专门的用户
+
+{% highlight bash %}
+#Create a system user and group to run asb and monero-wallet-rpc as
+sudo addgroup --system asb
+sudo adduser --system asb --home /var/lib/asb
+
+#Create necessary directories for the asb tools
+sudo mkdir /var/run/asb
+sudo mkdir /var/log/asb
+sudo mkdir /etc/asb
+
+#Set permissions for new directories
+sudo chown asb:asb /var/run/asb
+sudo chown asb:asb /var/log/asb
+sudo chown -R asb:asb /etc/asb
+
+{% endhighlight %}
+
+# monero-wallet-rpc systemd 配置
+
 monero-wallet-rpc 是asb用于连接门罗币区块链的工具，同时也会通过这个工具管理资金，以及进行交易所需要的签名和转账
 
 设置这个服务最简单的方式就是复制和保存我提供的systemd 配置文件，并将其保存在`/etc/systemd/system/monero-wallet-rpc.service`
@@ -209,4 +311,65 @@ WantedBy=multi-user.target
 这个配置文件决定了asb会如何运行，所以按照你想要的方式来调节参数
 
 这是一些你必须改变的关键参数：
-`external_addresses`是买方
+
+- `external_addresses`必须是一个公网或者暗网可以访问到的地址
+
+如果你想让你的asb节点只能通过tor访问，那么你需要先启动一次asb,然后复制显示的`/onion3/`地址，将其将`external_address`更改为这个地址：
+
+`external_addresses = ["/onion3/b4wfknratwn6rcpvpczs5pgtyyafedpcfjqnupr32qdfu63x6odql4id:9939", "/onion3/b4wfknratwn6rcpvpczs5pgtyyafedpcfjqnupr32qdfu63x6odql4id:9940"]`
+
+如果你使用ipv4并且没有配置DNS，那么这样设置参数：
+
+`external_addresses = ["/ip4/5.9.120.18/tcp/9939", "/ip4/5.9.120.18/tcp/9940/ws"]`
+
+如果你使用DNS，这样配置：
+external_addresses = ["/dns4/swap.sethforprivacy.com/tcp/9939", "/dns4/swap.sethforprivacy.com/tcp/9940/ws"]
+
+如果你熟悉高级DNS配置，那么可以研究如何使用`/dnsaddr`格式，可以参考文档：[   https://github.com/multiformats/multiaddr/blob/master/protocols/DNSADDR.md](https://github.com/multiformats/multiaddr/blob/master/protocols/DNSADDR.md)
+
+- `min_buy_btc` 决定了你可以接受的最小比特币量
+
+- `max_buy_btc` 决定了你可以接受的最大比特币量
+
+- `ask_spread` 决定了你的利润大小（在市价的基础上你加价的百分比），0.05即加价5%，0.1即加价10%
+
+- `electrum_rpc_url`， 指向你自己的electrum 服务器地址，或者一个你信任的服务器地址
+
+现在创建asb程序的配置文件，示例如下：
+{% highlight bash %}
+[data]
+dir = "/etc/asb"
+
+[network]
+listen = ["/ip4/0.0.0.0/tcp/9939", "/ip4/0.0.0.0/tcp/9940/ws"]
+rendezvous_point = "/dns4/discover.unstoppableswap.net/tcp/8888/p2p/12D3KooWA6cnqJpVnreBVnoro8midDL9Lpzmg8oJPoAGi7YYaamE"
+# Example external_addresses: 
+external_addresses = ["/onion3/example.onion/tcp/9939", "/onion3/example.onion/tcp/9940/ws"]
+
+[bitcoin]
+electrum_rpc_url = "ssl://electrum.blockstream.info:50002"
+target_block = 3
+network = "Mainnet"
+
+[monero]
+wallet_rpc_url = "http://127.0.0.1:18083/json_rpc"
+network = "Mainnet"
+
+[tor]
+control_port = 9051
+socks5_port = 9050
+
+[maker]
+min_buy_btc = 0.0005
+max_buy_btc = 0.001
+ask_spread = 0.05
+price_ticker_ws_url = "wss://ws.kraken.com/"
+
+{% endhighlight %}
+
+最后重启systemd服务以应用配置文件
+
+`sudo systemctl daemon-reload`
+
+# 洋葱路由配置
+
