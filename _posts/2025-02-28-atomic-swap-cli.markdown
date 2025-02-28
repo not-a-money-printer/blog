@@ -61,7 +61,7 @@ asb是用于提供门罗币侧的流动性的，如果你只是想要用比特�
 
 你需要记录下卖家的网络地址
 
-![seller_network_address](/assets/monero-atomic-swap/seller.png)
+![seller_network_address](/blog/assets/monero-atomic-swap/seller.png)
 
 2.开始交易：
 `./swap buy-xmr --receive-address <你的门罗币地址> --change-address <你的比特币退款地址> --seller <卖家网络地址>`
@@ -70,7 +70,7 @@ asb是用于提供门罗币侧的流动性的，如果你只是想要用比特�
 
 你要在seller参数后输入你刚才获取到的卖家网络地址
 
-![trade_init](/assets/monero-atomic-swap/trade_init.png)
+![trade_init](/blog/assets/monero-atomic-swap/trade_init.png)
 
 务必确保正确的输入比特币和门罗币地址
 
@@ -78,7 +78,7 @@ asb是用于提供门罗币侧的流动性的，如果你只是想要用比特�
 
 比特币入金地址会在交易发起成功后展示
 
-![deposit](/assets/monero-atomic-swap/deposit.png)
+![deposit](/blog/assets/monero-atomic-swap/deposit.png)
 
 4.喝一杯咖啡，等待门罗币到帐，整个交换过程会通过日志呈现 ：-）
 
@@ -96,9 +96,13 @@ asb是用于提供门罗币侧的流动性的，如果你只是想要用比特�
 
 额外信息：
 交换价格从kraken交易所自动获取，asb侧的门罗币卖家会卖的稍微贵一点以获得利润
+
 你的比特币退款地址应该是一个从没有使用过的新地址以保护你的隐私
-你的比特币会在交易失败时返回到退款地址
+
+你的比特币会在交易失败时返回
+
 你应该在每次交易使用不同的monero subaddress来确保隐私
+
 交易需要比特币主网确认两次，门罗币主网确认十次，所以完成交换需要一点耐心。如果你实在需要中断交换，可以使用swap的resume功能，但是最好不要这么做
 
 
