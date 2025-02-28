@@ -61,7 +61,7 @@ asb是用于提供门罗币侧的流动性的，如果你只是想要用比特�
 
 你需要记录下卖家的网络地址
 
-![seller_network_address](/assets/monero-atomic-swap/seller.png)
+![seller_network_address](/blog/assets/monero-atomic-swap/seller.png)
 
 2.开始交易：
 `./swap buy-xmr --receive-address <你的门罗币地址> --change-address <你的比特币退款地址> --seller <卖家网络地址>`
@@ -78,7 +78,7 @@ asb是用于提供门罗币侧的流动性的，如果你只是想要用比特�
 
 比特币入金地址会在交易发起成功后展示
 
-![deposit](/assets/monero-atomic-swap/deposit.png)
+![deposit](/blog/assets/monero-atomic-swap/deposit.png)
 
 4.喝一杯咖啡，等待门罗币到帐，整个交换过程会通过日志呈现 ：-）
 
