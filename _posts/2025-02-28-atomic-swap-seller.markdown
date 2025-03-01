@@ -540,7 +540,7 @@ sudo mv -f asb /usr/local/bin/
 
 你可以使用 /dnsaddr 格式来设置 external_address。
 
-libp2p 是 COMIT 原子交换的网络基础架构，其中一个很酷的功能是能够使用统一地址来描述 ASB 的所有访问方式。通过一个单一地址，你可以使ASB通过IP地址，DNS和 Onionv3访问，然后你的买方就可以选择对于他们来说最方便的方式。
+libp2p原子交换协议使用的网络基础架构，它可以让你使用单个统一的域名描述ASB的所有可能的访问方式。通过一个单一地址，你可以记录下ASB的IP，DNS和 Onionv3的地址，然后你的买方就可以选择对于他们来说最方便的方式。
 
 关于配置的详细文档请参考： [https://github.com/multiformats/multiaddr/blob/master/protocols/DNSADDR.md](https://github.com/multiformats/multiaddr/blob/master/protocols/DNSADDR.md)
 
