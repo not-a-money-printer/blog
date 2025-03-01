@@ -5,7 +5,7 @@ date:   2025-02-28 05:49:26 +0000
 categories: jekyll update
 ---
 
-此教程为seth for privacy的博客的翻译，但是原文中很多内容已经过时，所以进行了重写
+此教程为seth for privacy的博客的翻译，但是原文中很多内容已经过时，所以进行了重写，另外我删除了一些我认为的原作者过于啰嗦的部分，因为本文应该假设读者已经具有了一定的Linux基础知识，如果你不知道最基本的命令行常识，你就不应该尝试本教程，否则出现意外后找回资金对于你来说将会是一个非常痛苦的过程
 
 原文链接:[https://sethforprivacy.com/archives/run-an-atomic-swap-provider-advanced/](https://sethforprivacy.com/archives/run-an-atomic-swap-provider-advanced/)
 
